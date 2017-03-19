@@ -1,3 +1,32 @@
 ﻿@import "stylesheets/_bootstrap.scss";
-.col { background-color: green}
+.product-list {
+    .odd {
+        background-color:lightgrey;
+    }
+    .even {
+        background-color:antiquewhite
+    }
+}
 
+.product-detail {
+    display:none;
+}
+
+.units-0 a {
+    color:red;
+}
+
+#tabs {
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10px;
+}
+
+.warning {
+    display:none;
+}
+
+.purchase-confirmation  {
+    display:none;
+}

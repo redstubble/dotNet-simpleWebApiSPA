@@ -1,13 +1,15 @@
-﻿
+﻿<link href="https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css
+         " rel="stylesheet">
 @{
     ViewBag.Title = "Products List";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
 }
 <div class="col-xs-12">
     <h1 class="text-center">@ViewBag.Title</h1>
 </div>
 
-<div class="table-content">
+<div class="product-list">
     <div class="col-xs-3">
         <h3>Name</h3>
     </div>
@@ -24,72 +26,161 @@
 </div>
 
 
+<div class="product-detail">
+    <div class="row">
+        <div class="btn btn-primary back-btn">Go Back</div>
+    </div>
 
-<div>
-    <h2>All Products</h2>
-    <ul id="products" />
+    <div id="tabs">
+        <ul>
+            <li><a href="#tabs-1">Nunc tincidunt</a></li>
+            <li><a href="#tabs-2">Proin dolor</a></li>
+            <li><a href="#tabs-3">Aenean lacinia</a></li>
+        </ul>
+        <div id="tabs-1">
+            <div class="row container">
+                <div class="col-xs-12 col-md-3">Description</div>
+                <div class="col-xs-12 col-md-9 description"></div>
+                <div class="col-xs-12 col-md-3">Price</div>
+                <div class="col-xs-12 col-md-9 price"></div>
+                <div class="col-xs-12 col-md-3">Currency</div>
+                <div class="col-xs-12 col-md-9 currency"></div>
+                <div class="col-xs-12 col-md-3">Units Available</div>
+                <div class="col-xs-12 col-md-9 units-available"></div>
+            </div>
+        </div>
+        <div id="tabs-2">
+            <p>Morbi tincidunt, dui sit amet facilisis feugiat, odio metus gravida ante, ut pharetra massa metus id nunc. Duis scelerisque molestie turpis. Sed fringilla, massa eget luctus malesuada, metus eros molestie lectus, ut tempus eros massa ut dolor. Aenean aliquet fringilla sem. Suspendisse sed ligula in ligula suscipit aliquam. Praesent in eros vestibulum mi adipiscing adipiscing. Morbi facilisis. Curabitur ornare consequat nunc. Aenean vel metus. Ut posuere viverra nulla. Aliquam erat volutpat. Pellentesque convallis. Maecenas feugiat, tellus pellentesque pretium posuere, felis lorem euismod felis, eu ornare leo nisi vel felis. Mauris consectetur tortor et purus.</p>
+        </div>
+        <div id="tabs-3">
+            <p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue orci lorem eget lorem. Vestibulum non ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna vel enim commodo pellentesque. Praesent eu risus hendrerit ligula tempus pretium. Curabitur lorem enim, pretium nec, feugiat nec, luctus a, lacus.</p>
+            <p>Duis cursus. Maecenas ligula eros, blandit nec, pharetra at, semper at, magna. Nullam ac lacus. Nulla facilisi. Praesent viverra justo vitae neque. Praesent blandit adipiscing velit. Suspendisse potenti. Donec mattis, pede vel pharetra blandit, magna ligula faucibus eros, id euismod lacus dolor eget odio. Nam scelerisque. Donec non libero sed nulla mattis commodo. Ut sagittis. Donec nisi lectus, feugiat porttitor, tempor ac, tempor vitae, pede. Aenean vehicula velit eu tellus interdum rutrum. Maecenas commodo. Pellentesque nec elit. Fusce in lacus. Vivamus a libero vitae lectus hendrerit hendrerit.</p>
+        </div>
+    </div>
+
+    <button type="button" class="btn buy btn-primary" data-toggle="modal" data-target="#myModal">Buy</button>
+
 </div>
-<div>
-    <h2>Search by ID</h2>
-    <input type="text" id="prodId" size="5" />
-    <input type="button" value="Search" onclick="find();" />
-    <p id="product" />
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Modal Header</h4>
+            </div>
+            <div class="modal-body">
+                <p>Quantity:</p>
+                <input type="number" name="Quantity" min="0" max="10" value="0"><br>
+                <p>Price: <span class=" buy-price"></span></p>
+                <p class="warning">There are only <span class="units-left"></span> units available<p>
+                <p class="purchase-confirmation">This has now been added to your cart<p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default purchase" data-dismiss="modal">Purchase</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
 </div>
-
-
-
 
 
 @section scripts
 {
     <script>
-        //var url = location.protocol + '//' + location.hostname + ':19303/api/products';
-
-        $(document).ready(function () {
+        $(function () {
+            $(function () {
+                $("#tabs").tabs();
+            });
+            var title = '@ViewBag.Title';
+            var url = 'http://localhost:19303/api';
             // Send an AJAX request
             $.ajax({
-                url: 'http://localhost:19303/api/products',
+                url: url + '/products',
                 cache: true,
             }).done(function (data) {
-                console.log(data);
-                var container = $('.table-content');
-                var el = document.createElement('div');
+                var container = $('.product-list');
                 var htmlRow = '';
                 for (var i = 0, row; row = data[i]; i++) {
-                    htmlRow += ('<div class="row"><div class="col-xs-3">' + row.Name + '</div>' +
-                        '<div class="col-xs-3">' + row.Price + '</div>' +
+                    var rowtype = (i % 2) ? 'even' : 'odd';
+                    htmlRow += ('<div class="row ' + rowtype + ' units-' + row.UnitsAvailable + '"><div class="col-xs-3">' + row.Name + '</div>' +
+                        '<div class="col-xs-3">' + Math.round(row.Price * 100) / 100 + '</div>' +
                         '<div class="col-xs-3">' + row.CurrencyCode + '</div>' +
-                        '<div class="col-xs-3">' + row.Id + '</div></div>');
+                        '<div class="col-xs-3"><a href="#' + row.Id + '" data-id="' + row.Id + '" class="product-link">Details</a></div></div>');
                 };
-                el.innerHTML = htmlRow;
-                container.append(el);
-                
+                container.append(htmlRow);
+                $('.product-link').on('click', function (e) {
+                    e.preventDefault();
+                    getProductDetails($(this).data("id"));
+                    return false;
+                })
             });
 
-            //$.getJSON(url)
-            //    .done(function (data) {
-            //        // On success, 'data' contains a list of products.
-            //        $.each(data, function (key, item) {
-            //            // Add a list item for the product.
-            //            $('<li>', { text: formatItem(item) }).appendTo($('#products'));
-            //        });
-            //    });
+            var getProductDetails = function (id) {
+                var link = '@Url.Action("getProducts", "products", null, null)';
+                $.ajax({
+                    url: url + link + '?id=' + id,
+                    cache: true
+                }).done(function (data) {
+                    $('.back-btn', '.product-detail').on('click', function (e) {
+                        togglePages('main');
+                    });
+                    $('.buy.btn-primary', '.product-detail').on('click', function (e) {
+                        $('h4.modal-title').text(data.Name);
+                        var curr = (data.CurrencyCode == 'NZD') ? '' : data.CurrencyCode;
+                        var price = data.Price + ' ' + curr;
+                        $('.buy-price').text(price);
+                    });
+                    $('.purchase').on('click', function (e) {
+                        e.preventDefault();
+                        if ($('input[type="number"]').val() > data.UnitsAvailable) {
+                            $('.warning').show();
+                            $('.units-left', '.warning').text(data.UnitsAvailable);
+                        }
+                        else {
+                            $('.warning').hide();
+                            $('.purchase-confirmation').show();
+                            $('.purchase').text('OK');
+                            $('.purchase').on('click', function () {
+                                $('#myModal').modal('toggle');
+                                togglePages('main');
+                            })
+                        }
+
+                        return false;
+                    });
+                    $('h1').text(data.Name);
+                    $('.name', '.product-detail').text(data.Name);
+                    $('.description', '.product-detail').text(data.Description);
+                    $('.price', '.product-detail').text(data.Price);
+                    $('.currency', '.product-detail').text(data.CurrencyCode);
+                    $('.units-available', '.product-detail').text(data.UnitsAvailable);
+
+                    togglePages('product');
+                });
+            };
+
+            var togglePages = function (page) {
+                switch (page) {
+                    case 'main':
+                        $('h1').text(title);
+                        $('.product-list').show();
+                        $('.product-detail').hide();
+                        break;
+                    case 'product':
+                        $('.product-list').hide();
+                        $('.product-detail').show();
+                        break;
+                }
+
+            };
+
+
+
         });
 
-        function formatItem(item) {
-            return item.Name + ': $' + item.Price;
-        }
-
-        //function find() {
-        //    var id = $('#prodId').val();
-
-        //    $.getJSON(uri + '/' + id)
-        //    .done(function (data) {
-        //        $('#product').text(formatItem(data));
-        //    })
-        //    .fail(function (jqXHR, textStatus, err) {
-        //        $('#product').text('Error: ' + err);
-        //    });
-        //}
     </script>
 }

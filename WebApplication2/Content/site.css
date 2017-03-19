@@ -1,4 +1,4 @@
-@charset "UTF-8";
+﻿@charset "UTF-8";
 /*!
  * Bootstrap v3.3.7 (http://getbootstrap.com)
  * Copyright 2011-2016 Twitter, Inc.
@@ -5814,5 +5814,27 @@ button.close {
   .hidden-print {
     display: none !important; } }
 
-.col {
-  background-color: green; }
+.product-list .odd {
+  background-color: lightgrey; }
+
+.product-list .even {
+  background-color: antiquewhite; }
+
+.product-detail {
+  display: none; }
+
+.units-0 a {
+  color: red; }
+
+#tabs {
+  width: 95%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10px; }
+
+.warning {
+  display: none; }
+
+.purchase-confirmation {
+  display: none; }
+

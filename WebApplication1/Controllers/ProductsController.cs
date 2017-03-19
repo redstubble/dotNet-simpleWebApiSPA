@@ -11,13 +11,13 @@ namespace WebApplication1.Controllers
     public class ProductsController : ApiController
     {
 
-        DevTestData[] products = new DevTestData[] {
+        DevTestData[] productArray = new DevTestData[] {
                 new DevTestData() {
                     Id = 1,
                     Name = "Jaytamit",
                     Description = "Integer non turpis vitae orci tincidunt ullamcorper id pretium lectus.",
                     Price = 45.8655m,
-                    CurrencyCode = DevTestData.Currency.NZD,
+                    CurrencyCode = "NZD",
                     UnitsAvailable = 5,
                     DefaultSort = 2,
                 },
@@ -26,7 +26,7 @@ namespace WebApplication1.Controllers
                     Name = "Canlux",
                     Description = "Aenean interdum dapibus enim, vel pulvinar eros pharetra nec",
                     Price = 23.5874m,
-                    CurrencyCode = DevTestData.Currency.NZD,
+                    CurrencyCode = "NZD",
                     UnitsAvailable = 0,
                     DefaultSort = 4
                 },
@@ -35,7 +35,7 @@ namespace WebApplication1.Controllers
                     Name = "Sunkix",
                     Description = "Pellentesque nisi leo, laoreet vel ex eu, ultricies pharetra ligula.",
                     Price = 14.2565m,
-                    CurrencyCode = DevTestData.Currency.AUD,
+                    CurrencyCode = "AUD",
                     UnitsAvailable = 7,
                     DefaultSort = 1
                 },
@@ -44,7 +44,7 @@ namespace WebApplication1.Controllers
                     Name = "Kay-Lex",
                     Description = "Ut tempus tempor mi, in volutpat lorem varius a.",
                     Price = 26.5862m,
-                    CurrencyCode = DevTestData.Currency.NZD,
+                    CurrencyCode = "NZD",
                     UnitsAvailable = 2,
                     DefaultSort = 3
                 },
@@ -53,19 +53,29 @@ namespace WebApplication1.Controllers
                     Name = "Zamstring",
                     Description = "Proin finibus leo nulla, in elementum erat suscipit non.",
                     Price = 56.2518m,
-                    CurrencyCode = DevTestData.Currency.USD,
+                    CurrencyCode = "USD",
                     UnitsAvailable = 0,
                     DefaultSort = 5
                 }
             };
 
-        public IEnumerable<DevTestData> GetAllProducts() {
-            return products.OrderBy(a => a.DefaultSort);
+        [HttpGet]
+        public IEnumerable<DevTestData> products() {
+
+            //foreach (var product in productArray)
+            //{
+            //    product.CurrencyCode = ((DevTestData.Currency)product.CurrencyCode).ToString();
+            //}
+
+
+
+            return productArray.OrderBy(a => a.DefaultSort);
         }
 
-        public IHttpActionResult GetProduct(int id)
+        [HttpGet]
+        public IHttpActionResult getProduct(int id)
         {
-            var product = products.Where(a => a.Id == id).FirstOrDefault();
+            var product = productArray.Where(a => a.Id == id).FirstOrDefault();
             if (product == null)
                 return NotFound();
             return Ok(product);
