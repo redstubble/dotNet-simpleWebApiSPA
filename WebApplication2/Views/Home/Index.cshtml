@@ -1,0 +1,95 @@
+﻿
+@{
+    ViewBag.Title = "Products List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="col-xs-12">
+    <h1 class="text-center">@ViewBag.Title</h1>
+</div>
+
+<div class="table-content">
+    <div class="col-xs-3">
+        <h3>Name</h3>
+    </div>
+    <div class="col-xs-3">
+        <h3>Price</h3>
+    </div>
+    <div class="col-xs-3">
+        <h3>Currency</h3>
+    </div>
+    <div class="col-xs-3">
+        <h3 class="hidden-xs hidden-sm">Units Available</h3>
+        <h3 class="visible-xs visible-sm">Units</h3>
+    </div>
+</div>
+
+
+
+<div>
+    <h2>All Products</h2>
+    <ul id="products" />
+</div>
+<div>
+    <h2>Search by ID</h2>
+    <input type="text" id="prodId" size="5" />
+    <input type="button" value="Search" onclick="find();" />
+    <p id="product" />
+</div>
+
+
+
+
+
+@section scripts
+{
+    <script>
+        //var url = location.protocol + '//' + location.hostname + ':19303/api/products';
+
+        $(document).ready(function () {
+            // Send an AJAX request
+            $.ajax({
+                url: 'http://localhost:19303/api/products',
+                cache: true,
+            }).done(function (data) {
+                console.log(data);
+                var container = $('.table-content');
+                var el = document.createElement('div');
+                var htmlRow = '';
+                for (var i = 0, row; row = data[i]; i++) {
+                    htmlRow += ('<div class="row"><div class="col-xs-3">' + row.Name + '</div>' +
+                        '<div class="col-xs-3">' + row.Price + '</div>' +
+                        '<div class="col-xs-3">' + row.CurrencyCode + '</div>' +
+                        '<div class="col-xs-3">' + row.Id + '</div></div>');
+                };
+                el.innerHTML = htmlRow;
+                container.append(el);
+                
+            });
+
+            //$.getJSON(url)
+            //    .done(function (data) {
+            //        // On success, 'data' contains a list of products.
+            //        $.each(data, function (key, item) {
+            //            // Add a list item for the product.
+            //            $('<li>', { text: formatItem(item) }).appendTo($('#products'));
+            //        });
+            //    });
+        });
+
+        function formatItem(item) {
+            return item.Name + ': $' + item.Price;
+        }
+
+        //function find() {
+        //    var id = $('#prodId').val();
+
+        //    $.getJSON(uri + '/' + id)
+        //    .done(function (data) {
+        //        $('#product').text(formatItem(data));
+        //    })
+        //    .fail(function (jqXHR, textStatus, err) {
+        //        $('#product').text('Error: ' + err);
+        //    });
+        //}
+    </script>
+}
